@@ -181,8 +181,6 @@ def determinant_islem_4():
     determinant1 = determinant2 = determinant3 = determinant4 = determinant5 = 0
 
 
-
-
 def ek_matris_olusturma():
     global liste2
     global liste3
