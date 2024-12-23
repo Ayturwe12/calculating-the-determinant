@@ -4,13 +4,15 @@ def baslat():
     liste_olusturma()
 
 def liste_olusturma():
-    global liste
+    global liste,liste_p,dete
     liste = []
+    liste_p=[]
+
     try:
         while True:
             global secim
             global a,b
-            print("1: determinant alma\n 2:ek matris alma")
+            print("1: determinant alma\n 2:ek matris alma\n 3:Cramer ile bilinmeyen bulma")
             secim = int(input("lütfen yapmak istediğiniz işlemi seçin:"))
             a, b = map(int, input("Satır ve Sütun sayılarını sırasıyla boşluk bırakarak girin:").strip().split())
 
@@ -35,6 +37,12 @@ def liste_olusturma():
                     determinant_islem_3()
                 elif secim==2:
                     ek_matris_olusturma()
+                elif secim==3:
+                    liste_p_olusturma()
+                    determinant_islem_3()
+                    dete = determinant
+                    determinant_cramer()
+
             elif a == 4 and b == 4:
                 for i in range(1, 5):
                     for j in range(1, 5):
@@ -42,10 +50,17 @@ def liste_olusturma():
                         liste.append(deger)
                 if secim==1:
                     determinant_islem_4()
+                elif secim==2:
+                    ek_matris_olusturma()
+                elif secim==3:
+                    liste_p_olusturma()
+                    determinant_islem_4()
+                    dete = determinant
+                    determinant_cramer()
             else:
                 print("maalesef 5x5 ve üzeri matrisleri uygulama desteklememektedir.")
             liste.clear()
-            determinant = 0
+
             ex = str(input("Çıkmak için q basın,(devam etmek için 'enter' tuşlayın)): "))
             if ex == "q":
                 exit()
@@ -53,6 +68,84 @@ def liste_olusturma():
                 continue
     except ValueError:
         print("Lütfen istenen değerleri girin.Tekrar deneyin...")
+        baslat()
+
+def liste_p_olusturma():
+    print("--------------P'yi giriniz-------------------")
+    for i in range(1,a+1):
+        for j in range(1,2):
+            deger = int(input("a{}{}: ".format(i, j)))
+            liste_p.append(deger)
+def determinant_cramer():
+    global dete1,dete2,dete3,dete4,liste
+    liste_s = []
+
+    liste_s = liste.copy()
+    if a==3 and b==3:
+        liste[0] = liste_p[0]
+        liste[3] = liste_p[1]
+        liste[6] = liste_p[2]
+        determinant_islem_3()
+        dete1=determinant
+
+        liste = liste_s.copy()
+        liste[1] = liste_p[0]
+        liste[4] = liste_p[1]
+        liste[7] = liste_p[2]
+        determinant_islem_3()
+        dete2 = determinant
+
+        liste = liste_s.copy()
+        liste[2] = liste_p[0]
+        liste[5] = liste_p[1]
+        liste[8] = liste_p[2]
+        determinant_islem_3()
+        dete3 = determinant
+
+    elif a == 4 and b == 4:
+        liste[0] = liste_p[0]
+        liste[4] = liste_p[1]
+        liste[8] = liste_p[2]
+        liste[12] = liste_p[3]
+        determinant_islem_4()
+        dete1 = determinant
+
+        liste = liste_s.copy()
+        liste[1] = liste_p[0]
+        liste[5] = liste_p[1]
+        liste[9] = liste_p[2]
+        liste[13] = liste_p[3]
+        determinant_islem_4()
+        dete2 = determinant
+
+        liste = liste_s.copy()
+        liste[2] = liste_p[0]
+        liste[6] = liste_p[1]
+        liste[10] = liste_p[2]
+        liste[14] = liste_p[3]
+        determinant_islem_4()
+        dete3 = determinant
+
+        liste = liste_s.copy()
+        liste[3] = liste_p[0]
+        liste[7] = liste_p[1]
+        liste[11] = liste_p[2]
+        liste[15] = liste_p[3]
+        determinant_islem_4()
+        dete4= determinant
+    cramer_sonuc()
+
+def cramer_sonuc():
+    if a==3 and b==3:
+        print("x1=" , "{}/{}".format(dete1,dete),"=", dete1/dete)
+        print("x2=", "{}/{}".format(dete2,dete),"=", dete2/dete)
+        print("x3=", "{}/{}".format(dete3,dete),"=", dete3/dete)
+    elif a==4 and b==4:
+        print("x1=" , "{}/{}".format(dete1,dete),"=", dete1/dete)
+        print("x2=", "{}/{}".format(dete2,dete),"=", dete2/dete)
+        print("x3=", "{}/{}".format(dete3,dete),"=", dete3/dete)
+        print("x4=", "{}/{}".format(dete4, dete), "=", dete4 / dete)
+
 
 
 def determinant_islem_1():
@@ -61,10 +154,14 @@ def determinant_islem_2():
     determinant = liste[0] * liste[3] - liste[1] * liste[2]
     print("|a2x2|:", determinant)
 def determinant_islem_3():
+    global determinant
     determinant = liste[0] * (liste[4] * liste[8] - liste[7] * liste[5]) - liste[1] * (
                 liste[3] * liste[8] - liste[6] * liste[5]) + liste[2] * (liste[3] * liste[7] - liste[6] * liste[4])
-    print("|a3x3|:", determinant)
+    if secim==1:
+        print("|a3x3|:", determinant)
+
 def determinant_islem_4():
+    global determinant
     determinant1 = liste[0] * (liste[5] * (liste[10] * liste[15] - liste[11] * liste[14]) - liste[6] * (
                 liste[9] * liste[15] - liste[11] * liste[13]) + liste[7] * (
                                            liste[9] * liste[14] - liste[10] * liste[13]))
@@ -77,7 +174,10 @@ def determinant_islem_4():
     determinant4 = liste[3] * -1 * (liste[4] * (liste[9] * liste[14] - liste[13] * liste[10]) - liste[5] * (
                 liste[8] * liste[14] - liste[12] * liste[10]) + liste[6] * (
                                                 liste[8] * liste[13] - liste[12] * liste[9]))
-    print("|a4x4|:", determinant1 + determinant2 + determinant3 + determinant4)
+    determinant=determinant1 + determinant2 + determinant3 + determinant4
+    if secim == 1:
+
+        print("|a4x4|:", determinant)
     determinant1 = determinant2 = determinant3 = determinant4 = determinant5 = 0
 
 
@@ -138,7 +238,7 @@ def ek_matris_olusturma():
                 )
 
                 liste2.append(
-                    liste[9] * (liste[10] * liste[15] - liste[14] * liste[11])
+                    liste[4] * (liste[9] * liste[15] - liste[13] * liste[11])
                     - liste[5] * (liste[8] * liste[15] - liste[12] * liste[11])
                     + liste[7] * (liste[8] * liste[13] - liste[12] * liste[9])
                 )
@@ -178,7 +278,7 @@ def ek_matris_olusturma():
                 )
 
                 liste2.append(
-                    -1 * (
+                     (
                             liste[1] * (liste[6] * liste[15] - liste[7] * liste[14])
                             - liste[2] * (liste[5] * liste[15] - liste[13] * liste[7])
                             + liste[3] * (liste[5] * liste[14] - liste[13] * liste[6])
@@ -186,23 +286,27 @@ def ek_matris_olusturma():
                 )
 
                 liste2.append(
-                    liste[0] * (liste[6] * liste[15] - liste[14] * liste[7])
-                    - liste[2] * (liste[4] * liste[15] - liste[12] * liste[7])
-                    + liste[3] * (liste[4] * liste[14] - liste[12] * liste[6])
+                    -1* (
+                            liste[0] * (liste[6] * liste[15] - liste[14] * liste[7])
+                           - liste[2] * (liste[4] * liste[15] - liste[12] * liste[7])
+                           + liste[3] * (liste[4] * liste[14] - liste[12] * liste[6])
+                     )
                 )
 
                 liste2.append(
-                    -1 * (
+
                             liste[0] * (liste[5] * liste[15] - liste[13] * liste[7])
                             - liste[1] * (liste[4] * liste[15] - liste[12] * liste[7])
                             + liste[3] * (liste[4] * liste[13] - liste[12] * liste[5])
-                    )
+
                 )
 
                 liste2.append(
-                    liste[0] * (liste[5] * liste[14] - liste[6] * liste[13])
-                    - liste[1] * (liste[4] * liste[14] - liste[12] * liste[6])
-                    + liste[2] * (liste[4] * liste[13] - liste[12] * liste[5])
+                    -1*(
+                            liste[0] * (liste[5] * liste[14] - liste[6] * liste[13])
+                            - liste[1] * (liste[4] * liste[14] - liste[12] * liste[6])
+                            + liste[2] * (liste[4] * liste[13] - liste[12] * liste[5])
+                    )
                 )
 
                 liste2.append(
@@ -235,6 +339,7 @@ def ek_matris_olusturma():
                 transpoze_bul()
 
             def transpoze_bul():
+                liste3.append(liste2[0])
                 liste3.append(liste2[4])
                 liste3.append(liste2[8])
                 liste3.append(liste2[12])
@@ -257,8 +362,7 @@ def ek_matris_olusturma():
                     print(liste3[i:i + 4])
 
             kofaktor_bul()
-            print(liste2)
-            print(liste3)
+
         break
     liste2.clear()
     liste3.clear()
