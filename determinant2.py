@@ -12,9 +12,14 @@ def liste_olusturma():
         while True:
             global secim
             global a,b
-            print("1: determinant alma\n 2:ek matris alma\n 3:Cramer ile bilinmeyen bulma")
+            print("1: determinant alma(1x1,2x2,3x3,4x4)\n 2:ek matris alma(3x3,4x4)\n 3:Cramer ile bilinmeyen bulma(3x3,4x4)")
             secim = int(input("lütfen yapmak istediğiniz işlemi seçin:"))
             a, b = map(int, input("Satır ve Sütun sayılarını sırasıyla boşluk bırakarak girin:").strip().split())
+
+            for i in range(1, a+1):
+                for j in range(1, b+1):
+                    deger = int(input("a{}{}: ".format(i, j)))
+                    liste.append(deger)
 
             if a == 1 and b == 1:
                 deger = int(input("a1x1: "))
@@ -22,17 +27,11 @@ def liste_olusturma():
                     determinant_islem_1()
 
             elif a == 2 and b == 2:
-                for i in range(1, 3):
-                    for j in range(1, 3):
-                        deger = int(input("a{}{}: ".format(i, j)))
-                        liste.append(deger)
+
                 if secim==1:
                     determinant_islem_2()
             elif a == 3 and b == 3:
-                for i in range(1, 4):
-                    for j in range(1, 4):
-                        deger = int(input("a{}{}: ".format(i, j)))
-                        liste.append(deger)
+
                 if secim==1:
                     determinant_islem_3()
                 elif secim==2:
@@ -44,10 +43,7 @@ def liste_olusturma():
                     determinant_cramer()
 
             elif a == 4 and b == 4:
-                for i in range(1, 5):
-                    for j in range(1, 5):
-                        deger = int(input("a{}{}: ".format(i, j)))
-                        liste.append(deger)
+
                 if secim==1:
                     determinant_islem_4()
                 elif secim==2:
@@ -68,7 +64,11 @@ def liste_olusturma():
                 continue
     except ValueError:
         print("Lütfen istenen değerleri girin.Tekrar deneyin...")
-        baslat()
+        ex = str(input("Çıkmak için q basın,(devam etmek için 'enter' tuşlayın)): "))
+        if ex == "q":
+            exit()
+        else:
+            baslat()
 
 def liste_p_olusturma():
     print("--------------P'yi giriniz-------------------")
@@ -76,6 +76,7 @@ def liste_p_olusturma():
         for j in range(1,2):
             deger = int(input("a{}{}: ".format(i, j)))
             liste_p.append(deger)
+# işlemler
 def determinant_cramer():
     global dete1,dete2,dete3,dete4,liste
     liste_s = []
@@ -146,8 +147,6 @@ def cramer_sonuc():
         print("x3=", "{}/{}".format(dete3,dete),"=", dete3/dete)
         print("x4=", "{}/{}".format(dete4, dete), "=", dete4 / dete)
 
-
-
 def determinant_islem_1():
     print(deger)
 def determinant_islem_2():
@@ -180,7 +179,7 @@ def determinant_islem_4():
         print("|a4x4|:", determinant)
     determinant1 = determinant2 = determinant3 = determinant4 = determinant5 = 0
 
-
+# ek matris için:
 def ek_matris_olusturma():
     global liste2
     global liste3
